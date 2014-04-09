@@ -14,7 +14,7 @@ for dirpath, dirnames, filenames in os.walk('bookmarks'):
     elif filenames:
         for f in filenames:
             data_files.append(os.path.join(dirpath[len("bookmarks")+1:], f))
-            
+
 version = "%s.%s" % __import__('bookmarks').VERSION[:2]
 
 def read(filename):
@@ -23,13 +23,13 @@ def read(filename):
 setup(name='django-generic-bookmarks',
     version=version,
     description='Bookmarks, favourites, likes functionality for Django projects',
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
     author='Francesco Banconi',
     author_email='francesco.banconi@gmail.com',
     url='https://bitbucket.org/frankban/django-generic-bookmarks/downloads',
     zip_safe=False,
     packages=[
-        'bookmarks', 
+        'bookmarks',
         'bookmarks.templatetags',
         'bookmarks.views',
     ],
