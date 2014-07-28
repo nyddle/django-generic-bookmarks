@@ -15,13 +15,13 @@ def _parse_args(parser, token, expression):
     try:
         tag_name, arg = token.contents.split(None, 1)
     except ValueError:
-        error = u"%r tag requires arguments" % token.contents.split()[0]
-        raise template.TemplateSyntaxError, error
+        error = "%r tag requires arguments" % token.contents.split()[0]
+        raise template.TemplateSyntaxError(error)
     # args validation
     match = expression.match(arg)
     if not match:
-        error = u"%r tag has invalid arguments" % tag_name
-        raise template.TemplateSyntaxError, error
+        error = "%r tag has invalid arguments" % tag_name
+        raise template.TemplateSyntaxError(error)
     return match.groupdict()
  
 
@@ -84,14 +84,14 @@ class BookmarkNode(BaseNode):
         # user validation
         request = context['request']
         if request.user.is_anonymous():
-            return u''
+            return ''
 
         # instance and handler
         instance = self.instance.resolve(context)
         handler = handlers.library.get_handler(instance)
         # handler validation
         if handler is None:
-            return u''
+            return ''
         
         # key
         key = handler.get_key(request, instance, self._get_key(context))
@@ -101,7 +101,7 @@ class BookmarkNode(BaseNode):
             context[self.varname] = handler.get(request.user, instance, key)
         except exceptions.DoesNotExist:
             pass
-        return u''
+        return ''
 
 
 BOOKMARK_FORM_EXPRESSION = re.compile(r"""
@@ -210,19 +210,19 @@ class BookmarkFormNode(BaseNode):
         # user validation
         request = context['request']
         if request.user.is_anonymous() and self.varname is not None:
-            return u''
+            return ''
 
         # instance and handler
         instance = self.instance.resolve(context)
         handler = handlers.library.get_handler(instance)
         # handler validation
         if handler is None:
-            return u''
+            return ''
         
         # key validation
         key = handler.get_key(request, instance, self._get_key(context))
         if not handler.allow_key(request, instance, key):
-            return u''
+            return ''
 
         # creating form
         data = {
@@ -241,7 +241,7 @@ class BookmarkFormNode(BaseNode):
         else:
             # form as template variable
             context[self.varname] = form
-            return u''
+            return ''
 
 
 AJAX_BOOKMARK_FORM_EXPRESSION = re.compile(r"""
@@ -274,13 +274,13 @@ class AJAXBookmarkFormNode(BookmarkFormNode):
     def get_template_context(cls, request, form, instance, key):
         ctx = super(AJAXBookmarkFormNode, cls).get_template_context(
             request, form, instance, key)
-        template = u'bookmarkform_%(key)s-%(model)s-%(object_id)s'
+        template = 'bookmarkform_%(key)s-%(model)s-%(object_id)s'
         url = reverse('bookmarks_ajax_form')
         querydict = http.QueryDict('', mutable=True)
         querydict.update(form.data)
         ctx.update({
             'form_id': template % form.data,
-            'url': u'%s?%s' % (url, querydict.urlencode()),
+            'url': '%s?%s' % (url, querydict.urlencode()),
         })
         return ctx
 
@@ -375,4 +375,4 @@ class BookmarksNode(template.Node):
             lookups['key'] = self.key
         # retreiving bookmarks
         context[self.varname] = handlers.library.backend.filter(**lookups)
-        return u''
+        return ''

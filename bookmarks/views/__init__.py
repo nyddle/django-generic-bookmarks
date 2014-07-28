@@ -7,10 +7,10 @@ from bookmarks import handlers, signals, utils
 from bookmarks.templatetags import bookmarks_tags
 
 ERRORS = {
-    'model': u'Invalid model.',
-    'handler': u'Unregistered model.',
-    'key': u'Invalid key.',
-    'instance': u'Invalid instance.',
+    'model': 'Invalid model.',
+    'handler': 'Unregistered model.',
+    'key': 'Invalid key.',
+    'instance': 'Invalid instance.',
 }
 
 def bookmark(request):
@@ -20,7 +20,7 @@ def bookmark(request):
     if request.method == 'POST':
         
         # getting handler
-        model_name = request.POST.get('model', u'')
+        model_name = request.POST.get('model', '')
         model = get_model(*model_name.split('.'))
         if model is None:
             # invalid model -> bad request
@@ -52,7 +52,7 @@ def bookmark(request):
             for receiver, response in responses:
                 if response == False:
                     return http.HttpResponseBadRequest(
-                        u'Receiver %r killed the bookmark process' % 
+                        'Receiver %r killed the bookmark process' % 
                         receiver.__name__)
             
             # adding or removing the bookmark
@@ -85,7 +85,7 @@ def ajax_form(request, extra_context=None,
     """
     if request.is_ajax():
         # getting handler
-        model_name = request.GET.get('model', u'')
+        model_name = request.GET.get('model', '')
         model = get_model(*model_name.split('.'))
         if model is None:
             # invalid model -> bad request

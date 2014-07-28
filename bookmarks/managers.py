@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from bookmarks import exceptions, utils
+import collections
 
 class QuerysetWithContents(object):
     """
@@ -16,7 +17,7 @@ class QuerysetWithContents(object):
             return getattr(self.queryset, name)
         if hasattr(self.queryset, name):
             attr = getattr(self.queryset, name)
-            if callable(attr):
+            if isinstance(attr, collections.Callable):
                 def _wrap(*args, **kwargs):
                     return self.__class__(attr(*args, **kwargs))
                 return _wrap
@@ -31,9 +32,9 @@ class QuerysetWithContents(object):
         generics = {}
         for i in objects:
             generics.setdefault(i.content_type_id, set()).add(i.object_id)
-        content_types = ContentType.objects.in_bulk(generics.keys())
+        content_types = ContentType.objects.in_bulk(list(generics.keys()))
         relations = {}
-        for content_type_id, pk_list in generics.items():
+        for content_type_id, pk_list in list(generics.items()):
             model = content_types[content_type_id].model_class()
             relations[content_type_id] = model.objects.in_bulk(pk_list)
         for i in objects:

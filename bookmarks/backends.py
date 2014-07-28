@@ -184,7 +184,7 @@ class MongoBackend(BaseBackend):
             meta = {'indexes': ['user_id', ('content_type_id', 'object_id')]}
 
             def __unicode__(self):
-                return u'Bookmark for %s by %s' % (self.content_object, 
+                return 'Bookmark for %s by %s' % (self.content_object, 
                     self.user)
 
             def __eq__(self, other):

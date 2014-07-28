@@ -55,7 +55,7 @@ class BookmarkForm(forms.Form):
         exists in the database, and validate only if the user is authenticated.
         """
         if self.request.user.is_anonymous():
-            raise forms.ValidationError(u'Invalid user.')
+            raise forms.ValidationError('Invalid user.')
         # data validation
         model_name = self.cleaned_data.get('model')
         object_id = self.cleaned_data.get('object_id')
@@ -63,12 +63,12 @@ class BookmarkForm(forms.Form):
             # getting model
             model = get_model(*model_name.split('.'))
             if model is None:
-                raise forms.ValidationError(u'Invalid model.')
+                raise forms.ValidationError('Invalid model.')
             # getting instance
             try:
                 self._instance = model.objects.get(pk=object_id)
             except model.DoesNotExist:
-                raise forms.ValidationError(u'Invalid instance.')
+                raise forms.ValidationError('Invalid instance.')
         # call the parent
         return super(BookmarkForm, self).clean()
 
@@ -96,7 +96,7 @@ class BookmarkForm(forms.Form):
         """
         if self.is_valid():
             return self._exists()
-        raise ValueError(u'Form is not valid.')
+        raise ValueError('Form is not valid.')
 
     def save(self):
         """

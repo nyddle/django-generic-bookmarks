@@ -62,7 +62,7 @@ class Handler(object):
     can_remove_bookmarks = settings.CAN_REMOVE_BOOKMARKS
 
     form_class = forms.BookmarkForm
-    failure_message = u'Invalid data in bookmark form.'
+    failure_message = 'Invalid data in bookmark form.'
     
     def __init__(self, model, backend):
         self.model = model
@@ -291,7 +291,7 @@ class Registry(object):
         Return an handler instance for the given *model*.
         """
         handler = handler_class(model, self.backend)
-        for k, v in options.items():
+        for k, v in list(options.items()):
             setattr(handler, k, v)
         return handler
 

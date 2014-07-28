@@ -23,7 +23,7 @@ class BookmarkTestModel(models.Model):
     name = models.CharField(max_length=8)
     
     def __unicode__(self):
-        return unicode(self.name)
+        return str(self.name)
 
 
 class BookmarkTestMixin(object):
@@ -178,9 +178,9 @@ class DefaultBackendTestCase(unittest.TestCase, BaseBackendTest):
 try:
     mongo_backend = backends.MongoBackend()
 except ImportError:
-    print "Skipping mongo backend tests: you must pip install mongoengine."
+    print("Skipping mongo backend tests: you must pip install mongoengine.")
 except exceptions.MongodbConnectionError:
-    print "Skipping mongo backend tests: unable to connect to mongodb."
+    print("Skipping mongo backend tests: unable to connect to mongodb.")
 else:
     class MongoBackendTestCase(unittest.TestCase, BaseBackendTest):            
         def setUp(self):
@@ -338,7 +338,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
 
     def test_bookmark(self):
         # successfully retreiving a bookmark
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmark for instance using mykey as mybookmark %}
         """
@@ -351,7 +351,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         self.assertEqual(context['mybookmark'], self.bookmark1)
         # successfully retreiving a bookmark using hardcoded key,
         # dotted notation and default key
-        template2 = u"""
+        template2 = """
             {% load bookmarks_tags %}
             {% bookmark for instances.0 as mybookmark %}
         """ 
@@ -388,7 +388,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
 
     def test_bookmark_form(self):
         # successfully retreiving a form for existent bokmark
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmark_form for instance using mykey as myform %}
         """
@@ -405,7 +405,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         self.assertTrue(form.bookmark_exists())
         self.assertEqual(form.instance(), self.bookmark2.content_object)
         # successfully retreiving a form for unexistent bokmark without key
-        template2 = u"""
+        template2 = """
             {% load bookmarks_tags %}
             {% bookmark_form for instance as myform %}
         """
@@ -429,7 +429,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         self.assertFalse(html)
         self.assertIsNone(context.get('myform'))
         # successfully retreiving a form with dotted notation and different key
-        template3 = u"""
+        template3 = """
             {% load bookmarks_tags %}
             {% bookmark_form for instances.0 using mykey as myform %}
         """
@@ -463,7 +463,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         self.assertIsNone(context.get('myform'))
         handlers.library.register(BookmarkTestModel)
         # return html
-        template4 = u"""
+        template4 = """
             {% load bookmarks_tags %}
             {% bookmark_form for instance %}
         """
@@ -474,7 +474,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         self.assertTrue(html)
 
     def test_ajax_bookmark_form(self):
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% ajax_bookmark_form for instance %}
         """
@@ -497,7 +497,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         bookmark4 = self.backend.add(user2, instance2, key2)
         bookmark5 = self.backend.add(user1, user2, key1)
         # getting all bookmarks
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks as bookmarks %}
         """
@@ -507,7 +507,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark1, bookmark2, bookmark3, bookmark4, bookmark5]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of instance1
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks of instance as bookmarks %}
         """
@@ -519,7 +519,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark1, bookmark2, bookmark3]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of user2
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks by user as bookmarks %}
         """
@@ -531,7 +531,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark3, bookmark4]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of dotted user1 reversed
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks by users.0 reversed as bookmarks %}
         """
@@ -543,7 +543,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark5, bookmark2, bookmark1]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of key2
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks using key as bookmarks %}
         """
@@ -555,7 +555,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark2, bookmark4]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of instance1 model name and key1
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks of 'bookmarks.bookmarktestmodel' using mykey as bookmarks %}
         """
@@ -567,7 +567,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark1, bookmark3]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of user1 model name
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks of 'auth.user' as mybookmarks %}
         """
@@ -577,7 +577,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark5]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks of user2, instance1 and key1
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks of instances.0 by myuser using key as bookmarks %}
         """
@@ -591,7 +591,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark3]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks with user2 and hardcoded key1 reversed
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks by user using 'templatetags_bookmark_1' reversed as bookmarks %}
         """
@@ -603,7 +603,7 @@ class TemplatetagsTestCase(unittest.TestCase, BookmarkTestMixin):
         expected = [bookmark3]
         self.assertEqual(bookmarks, expected)
         # getting all bookmarks with unexistent key
-        template = u"""
+        template = """
             {% load bookmarks_tags %}
             {% bookmarks using 'wrong_key' as bookmarks %}
         """
@@ -710,7 +710,7 @@ class BookmarkViewTestCase(unittest.TestCase, BookmarkTestMixin):
 try:
     from bookmarks.views.generic import BookmarksForView, BookmarksByView
 except ImportError:
-    print "Skipping class based views tests: unsupported by current Django version."
+    print("Skipping class based views tests: unsupported by current Django version.")
 else:
 
     class ClassBasedViewTextMixin(BookmarkTestMixin):

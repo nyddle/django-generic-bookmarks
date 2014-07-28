@@ -57,7 +57,7 @@ class Bookmark(models.Model):
         unique_together = ('content_type', 'object_id', 'key', 'user')
 
     def __unicode__(self):
-        return u'Bookmark for %s by %s' % (self.content_object, self.user)
+        return 'Bookmark for %s by %s' % (self.content_object, self.user)
         
         
 # IN BULK SELECT QUERIES
